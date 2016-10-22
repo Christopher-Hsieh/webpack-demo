@@ -8,6 +8,10 @@ const parts = require('./libs/parts');
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
+  style: [
+    path.join(__dirname, 'node_modules', 'purecss'),
+    path.join(__dirname, 'app', 'main.css')
+  ],
   build: path.join(__dirname, 'build')
 };
 
@@ -20,6 +24,7 @@ const common = {
   // convenient with more complex configurations.
   entry: {
     app: PATHS.app,
+    style: PATHS.style,
     vendor: ['react']
   },
   output: {
@@ -53,6 +58,8 @@ switch(process.env.npm_lifecycle_event) {
           }
       },
 
+      parts.clean(PATHS.build),
+
       parts.setFreeVariable(
         'process.env.NODE_ENV',
         'production'
@@ -64,7 +71,9 @@ switch(process.env.npm_lifecycle_event) {
       }),
 
       parts.minify(),
-      parts.setupCSS(PATHS.app)
+      parts.extractCSS(PATHS.style),
+      parts.purifyCSS([PATHS.app])
+
     );
 
     break;
@@ -74,7 +83,7 @@ switch(process.env.npm_lifecycle_event) {
       {
         devtool: 'eval-source-map'
       },
-      parts.setupCSS(PATHS.app),
+      parts.setupCSS(PATHS.style),
       parts.devServer({
         // Customize host/port here if needed
         host: process.env.HOST,
@@ -84,4 +93,7 @@ switch(process.env.npm_lifecycle_event) {
 
 }
 
-module.exports = validate(config);
+// Run validator in quiet mode to avoid output in stats
+module.exports = validate(config, {
+  quiet: true
+});
