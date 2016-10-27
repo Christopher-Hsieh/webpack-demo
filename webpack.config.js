@@ -28,6 +28,21 @@ const common = {
         test: /\.less$/,
         loaders: ['style', 'css', 'less'],
         include: PATHS.style
+      },
+      {
+        test: /\.(jpg|png)$/,
+        loader: 'url?limit=25000',
+        include: PATHS.images
+      }
+    ]
+  },
+    module: {
+    preLoaders: [
+      {
+        test: /\.jsx?$/,
+        loaders: ['jshint'],
+        // define an include so we check just the files we need
+        include: PATHS.app
       }
     ]
   },
