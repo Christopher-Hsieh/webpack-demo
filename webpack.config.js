@@ -22,6 +22,15 @@ const common = {
   // Entry accepts a path or an object of entries.
   // We'll be using the latter form given it's
   // convenient with more complex configurations.
+  module: {
+    loaders: [
+      {
+        test: /\.less$/,
+        loaders: ['style', 'css', 'less'],
+        include: PATHS.style
+      }
+    ]
+  },
   entry: {
     app: PATHS.app,
     style: PATHS.style,
@@ -52,7 +61,7 @@ switch(process.env.npm_lifecycle_event) {
           output: {
             path: PATHS.build,
             // Tweak this to match your GitHub project name
-            publicPath: '/JumpingRock.github.io/',
+            publicPath: '/webpack-demo/',
             filename: '[name].[chunkhash].js',
             // This is used for require.ensure. The setup
             // will work without but this is useful to set.
